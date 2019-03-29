@@ -1,0 +1,10 @@
+#Maps container name to veth interface for cross reference with NetData
+
+for container in $(docker ps -q); do
+    name=`docker ps -f id=$container --format "{{.Image}}" | cut -d/ -f2`
+    iflink=`docker exec -it $container bash -c 'cat /sys/class/net/eth0/iflink'`
+    iflink=`echo $iflink|tr -d '\r'`
+    veth=`grep -l $iflink /sys/class/net/veth*/ifindex`
+    veth=`echo $veth|sed -e 's;^.*net/\(.*\)/ifindex$;\1;'`
+    echo $name:$veth
+done
