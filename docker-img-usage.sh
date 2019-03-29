@@ -32,7 +32,7 @@ docker_set_exclude_dir () {
   #echo $exclude
 }
 
-for container in $(docker ps --format '{{.Names}}'|grep heimdall)
+for container in $(docker ps --format '{{.Names}}')
 do 
   echo -e "\e[32;4m$container\e[0m"
   docker_get_mounts "$container"
