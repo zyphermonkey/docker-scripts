@@ -1,40 +1,44 @@
-for i in `docker ps --format '{{.Names}}'`;do echo $i;done
+#!/bin/bash
+docker_find_files () {
+  echo -e "\e[96m  Largest Files (+10M)\e[0m"
+  docker exec $1 sh -c '/usr/bin/find / -xdev $2 -path ./proc -prune -o -path ./sys -prune -o -type f -size +10000k -exec du -Shx {} + | sort -rh | head | sed "s/^/  /"'
+}
 
-#get docker mounts
-docker inspect --format='{{range .Mounts}}{{json .Destination}}{{end}}' splunk | tr \" '\n' | grep -v "^$"
+docker_find_directories () {
+  #du -hxa / --exclude="/data" --exclude="/dockerlogs" --exclude="/dockerlogs2" --exclude="/dockervarlib" --exclude="/license" --exclude="/opt/splunk/etc" --exclude="/opt/splunk/var" | sort -h -r | head
+  echo -e "\e[96m  Largest Directories\e[0m"
+  docker exec $1 sh -c 'du -hxa / $2 | sort -rh | head | sed "s/^/  /"'
+}
 
-#find largest directories
-du -hxa / --exclude="/data" --exclude="/dockerlogs" --exclude="/dockerlogs2" --exclude="/dockervarlib" --exclude="/license" --exclude="/opt/splunk/etc" --exclude="/opt/splunk/var" | sort -h -r | head
+docker_find_subdirectories () {
+  #du -Shx /  --exclude="/data" --exclude="/dockerlogs" --exclude="/dockerlogs2" --exclude="/dockervarlib" --exclude="/license" --exclude="/opt/splunk/etc" --exclude="/opt/splunk/var" | sort -rh | head
+  echo -e "\e[96m  Largest Directories (excluding subdirectories)\e[0m"
+  docker exec $1 sh -c 'du -Sxa / $2 | sort -rh | head | sed "s/^/  /"'
+}
 
-#find largest directory excluding subdirectories (-S)
-du -Shx /  --exclude="/data" --exclude="/dockerlogs" --exclude="/dockerlogs2" --exclude="/dockervarlib" --exclude="/license" --exclude="/opt/splunk/etc" --exclude="/opt/splunk/var" | sort -rh | head
+docker_get_mounts () {
+  mounts=$(docker inspect --format='{{range .Mounts}}{{json .Destination}}{{end}}' $1)
+  #echo $mounts
+  
+  #echo $path
+}
 
-mounts=`docker inspect --format='{{range .Mounts}}{{json .Destination}}{{end}}' splunk`
-docker exec -it -e mounts=$mounts splunk bash
-for i in `echo $mounts | tr \" '\n' | grep -v "^$"`; do echo $i; done
+docker_set_exclude_path () {
+  for i in `echo $mounts | tr \" '\n' | grep -v "^$"`; do path="$path -path '.$i' -prune -o "; done
+}
 
+docker_set_exclude_dir () {
+  for i in `echo $mounts | tr \" '\n' | grep -v "^$"`; do exclude="$exclude --exclude='$i' "; done
+  #echo $exclude
+}
 
-find . -xdev \
--path './dockerlogs' -prune -o \
--path './dockerlogs2' -prune -o \
--path './dockervarlib' -prune -o \
--path './proc' -prune -o \
--path './sys' -prune -o \
--path './opt/splunk/etc' -prune -o \
--path './opt/splunk/var' -prune -o \
--path './license' -prune -o \
--path './data' -prune -o \
--type f \
--exec du -Shx {} + \
-| sort -rh \
-| head -n 20
-
-find . -xdev \
--path './config' -prune -o \
--path './proc' -prune -o \
--path './sys' -prune -o \
--type f \
--size 10000k \
--exec du -Shx {} + \
-| sort -rh \
-| head -n 20
+for container in $(docker ps --format '{{.Names}}'|grep heimdall)
+do 
+  echo -e "\e[32;4m$container\e[0m"
+  docker_get_mounts "$container"
+  docker_set_exclude_path
+  docker_set_exclude_dir
+  docker_find_files $container $path
+  docker_find_directories $container $exclude
+  docker_find_subdirectories $container $exclude
+done
