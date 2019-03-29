@@ -13,7 +13,7 @@ docker_find_directories () {
 docker_find_subdirectories () {
   #du -Shx /  --exclude="/data" --exclude="/dockerlogs" --exclude="/dockerlogs2" --exclude="/dockervarlib" --exclude="/license" --exclude="/opt/splunk/etc" --exclude="/opt/splunk/var" | sort -rh | head
   echo -e "\e[96m  Largest Directories (excluding subdirectories)\e[0m"
-  docker exec $1 sh -c 'du -Sxa / $2 | sort -rh | head | sed "s/^/  /"'
+  docker exec $1 sh -c 'du -Shx / $2 | sort -rh | head | sed "s/^/  /"'
 }
 
 docker_get_mounts () {
