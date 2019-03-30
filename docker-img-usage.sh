@@ -1,17 +1,17 @@
 #!/bin/bash
 docker_find_files () {
-  #echo -e "\e[96m  Largest Files (+50M)\e[0m"
-  docker_find_files_results=$(docker exec $1 sh -c '/usr/bin/find / -xdev $2 -path ./proc -prune -o -path ./sys -prune -o -type f -size +50000k -exec du -Shx {} + | sort -rh | head | sed "s/^/    /"')
+  #echo -e "\e[96m  Largest Files (+200M)\e[0m"
+  docker_find_files_results=$(docker exec $1 sh -c '/usr/bin/find / -xdev $2 -path ./proc -prune -o -path ./sys -prune -o -type f -size +200000k -exec du -Shx {} + | sort -rh | head | sed "s/^/    /"')
 }
 
 docker_find_directories () {
-  #echo -e "\e[96m  Largest Directories (+50M)\e[0m"
-  docker_find_directories_results=$(docker exec $1 sh -c 'du -hxa --threshold=50M / $2 | sort -rh | head | sed "s/^/    /"')
+  #echo -e "\e[96m  Largest Directories (+200M)\e[0m"
+  docker_find_directories_results=$(docker exec $1 sh -c 'du -hxa --threshold=200M / $2 | sort -rh | head | sed "s/^/    /"')
 }
 
 docker_find_subdirectories () {
-  #echo -e "\e[96m  Largest Directories (+50M) (excluding subdirectories)\e[0m"
-  docker_find_subdirectories_results=$(docker exec $1 sh -c 'du -Shx --threshold=50M / $2 | sort -rh | head | sed "s/^/    /"')
+  #echo -e "\e[96m  Largest Directories (+200M) (excluding subdirectories)\e[0m"
+  docker_find_subdirectories_results=$(docker exec $1 sh -c 'du -Shx --threshold=200M / $2 | sort -rh | head | sed "s/^/    /"')
 }
 
 docker_get_mounts () {
@@ -34,18 +34,22 @@ results () {
   fi 
   
   if [[ ! -z $docker_find_files_results ]]; then
-    echo -e "\e[96m  Largest Files (+50M)\e[0m"
+    echo -e "\e[96m  Largest Files (+200M)\e[0m"
 	echo $docker_find_files_results
   fi 
 
   if [[ ! -z $docker_find_directories_results ]]; then
-    echo -e "\e[96m  Largest Directories (+50M)\e[0m"
+    echo -e "\e[96m  Largest Directories (+200M)\e[0m"
 	echo $docker_find_directories_results
   fi 
 
   if [[ ! -z $docker_find_subdirectories_results ]]; then
-    echo -e "\e[96m  Largest Directories (+50M) (excluding subdirectories)\e[0m"
+    echo -e "\e[96m  Largest Directories (+200M) (excluding subdirectories)\e[0m"
 	echo $docker_find_subdirectories_results
+  fi
+
+  if [[ ! -z $docker_find_files_results || ! -z $docker_find_directories_results || ! -z $docker_find_subdirectories_results ]]; then
+    echo ""
   fi 
   
 }
