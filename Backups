@@ -6,8 +6,6 @@ rsync --archive -Phv /mnt/user/Media/Music /mnt/disks/WD_easystore_25FB/backups/
 rsync --archive -Phv /mnt/user/Media/Cameras /mnt/disks/WD_easystore_25FB/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_easystore_25FB/backups/tower/$(date +%F)-cameras.log"
 rsync --archive -Phv /mnt/user/Media/Nextcloud /mnt/disks/WD_easystore_25FB/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_easystore_25FB/backups/tower/$(date +%F)-nextcloud.log"
 
-rsync --archive --delete -Phv /mnt/user/Backup/CommunityApplicationsAppdataBackup/        /mnt/disks/WD_easystore_25FB/backups/tower/CommunityApplicationsAppdataBackup/ --stats -i --log-file="/mnt/disks/WD_easystore_25FB/backups/tower/$(date +%F)-CommunityApplicationsAppdataBackup.log"
-rsync --archive --delete -Phv /mnt/user/Backup/CommunityApplicationsAppdataBackup_USB/    /mnt/disks/WD_easystore_25FB/backups/tower/CommunityApplicationsAppdataBackup/ --stats -i --log-file="/mnt/disks/WD_easystore_25FB/backups/tower/$(date +%F)-CommunityApplicationsAppdataBackup.log"
-rsync --archive --delete -Phv /mnt/user/Backup/CommunityApplicationsAppdataBackup_VM_XML/ /mnt/disks/WD_easystore_25FB/backups/tower/CommunityApplicationsAppdataBackup/ --stats -i --log-file="/mnt/disks/WD_easystore_25FB/backups/tower/$(date +%F)-CommunityApplicationsAppdataBackup.log"
+rsync --archive --delete -Phv /mnt/user/Backup/CommunityApplicationsAppdataBackup/ /mnt/user/Backup/CommunityApplicationsAppdataBackup_USB/ /mnt/user/Backup/CommunityApplicationsAppdataBackup_VM_XML/ /mnt/disks/WD_easystore_25FB/backups/tower/CommunityApplicationsAppdataBackup/ --stats -i --log-file="/mnt/disks/WD_easystore_25FB/backups/tower/$(date +%F)-CommunityApplicationsAppdataBackup.log"
 
 /usr/local/emhttp/webGui/scripts/notify -i normal -e Backup -s External Backup -d "Backup to External Drive is Complete"
