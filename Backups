@@ -2,11 +2,36 @@
 #description=Backup Media to External HDD
 #arrayStarted=true
 #name=Media Backup
+
+
+#--archive, -a            archive mode is -rlptgoD (no -A,-X,-U,-N,-H)
+##--recursive, -r          recurse into directories
+##--links, -l              copy symlinks as symlinks
+##--perms, -p              preserve permissions
+##--times, -t              preserve modification times
+##--group, -g              preserve group
+##--owner, -o              preserve owner (super-user only)
+##-D                       same as --devices --specials
+###--devices                preserve device files (super-user only)
+###--specials               preserve special files
+
+
+#-P                       same as --partial --progress
+##--partial                keep partially transferred files
+##--progress               show progress during transfer
+#--human-readable, -h     output numbers in a human-readable format
+#--verbose, -v            increase verbosity
+#--stats                  give some file-transfer stats
+#--itemize-changes, -i    output a change-summary for all updates
+
+
+
 if mountpoint -q /mnt/disks/WD_My_Book_25EE; then
     echo "/path/to/directory is mounted."
     rsync --archive -Phv /mnt/user/Media/Music /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/$(date +%F)-music.log"
     rsync --archive -Phv /mnt/user/Media/Cameras /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/$(date +%F)-cameras.log"
     rsync --archive -Phv /mnt/user/Media/Nextcloud /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/$(date +%F)-nextcloud.log"
+    
 
     rsync --archive --delete -Phv /mnt/user/Backup/tower/CommunityApplicationsAppdataBackup /mnt/user/Backup/tower/CommunityApplicationsAppdataBackup_USB /mnt/user/Backup/tower/CommunityApplicationsAppdataBackup_VM_XML /mnt/disks/WD_My_Book_25EE/backups/tower/CommunityApplicationsAppdataBackup/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/$(date +%F)-CommunityApplicationsAppdataBackup.log"
     /usr/local/emhttp/webGui/scripts/notify -i normal -e "Backup" -s "External Backup" -d "Backup to External Drive is Complete"
