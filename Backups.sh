@@ -28,12 +28,12 @@
 
 if mountpoint -q /mnt/disks/WD_My_Book_25EE; then
     echo "/path/to/directory is mounted."
-    rsync --archive -Phv /mnt/user/Media/Music /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/$(date +%F)-music.log"
-    rsync --archive -Phv /mnt/user/Media/Cameras /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/$(date +%F)-cameras.log"
-    rsync --archive -Phv /mnt/user/Media/Nextcloud /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/$(date +%F)-nextcloud.log"
+    rsync --archive -Phv /mnt/user/Media/Music /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/logs/$(date +%Y)/$(date +%F)-music.log"
+    rsync --archive -Phv /mnt/user/Media/Cameras /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/logs/$(date +%Y)/$(date +%F)-cameras.log"
+    rsync --archive -Phv /mnt/user/Media/Nextcloud /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/logs/$(date +%Y)/$(date +%F)-nextcloud.log"
     
 
-    rsync --archive --delete -Phv /mnt/user/Backup/tower/CommunityApplicationsAppdataBackup /mnt/user/Backup/tower/CommunityApplicationsAppdataBackup_USB /mnt/user/Backup/tower/CommunityApplicationsAppdataBackup_VM_XML /mnt/disks/WD_My_Book_25EE/backups/tower/CommunityApplicationsAppdataBackup/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/$(date +%F)-CommunityApplicationsAppdataBackup.log"
+    rsync --archive --delete -Phv /mnt/user/Backup/tower/CommunityApplicationsAppdataBackup /mnt/user/Backup/tower/CommunityApplicationsAppdataBackup_USB /mnt/user/Backup/tower/CommunityApplicationsAppdataBackup_VM_XML /mnt/disks/WD_My_Book_25EE/backups/tower/CommunityApplicationsAppdataBackup/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/logs/$(date +%Y)/$(date +%F)-CommunityApplicationsAppdataBackup.log"
     /usr/local/emhttp/webGui/scripts/notify -i normal -e "Backup" -s "External Backup" -d "Backup to External Drive is Complete"
 else
     echo "/path/to/directory is not mounted."
