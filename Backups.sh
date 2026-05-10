@@ -28,6 +28,7 @@
 
 if mountpoint -q /mnt/disks/WD_My_Book_25EE; then
     echo "/path/to/directory is mounted."
+    mkdir -p /mnt/disks/WD_My_Book_25EE/backups/tower/logs/$(date +%Y)
     rsync --archive -Phv /mnt/user/Media/Music /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/logs/$(date +%Y)/$(date +%F)-music.log"
     rsync --archive -Phv /mnt/user/Media/Cameras /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/logs/$(date +%Y)/$(date +%F)-cameras.log"
     rsync --archive -Phv /mnt/user/Media/Nextcloud /mnt/disks/WD_My_Book_25EE/backups/tower/Media/ --stats -i --log-file="/mnt/disks/WD_My_Book_25EE/backups/tower/logs/$(date +%Y)/$(date +%F)-nextcloud.log"
